@@ -123,7 +123,11 @@
     ];
 
     let app, db, currentRoom = "", currentName = "", unsubscribeRoom = null;
-
+    let clientId = localStorage.getItem("need2need_client_id");
+    if (!clientId) {
+      clientId = crypto.randomUUID();
+      localStorage.setItem("need2need_client_id", clientId);
+    }
     const setupCard = document.getElementById("setupCard");
     const appArea = document.getElementById("appArea");
     const myNameInput = document.getElementById("myName");
@@ -199,10 +203,15 @@
           incomingMeta.textContent = "";
           return;
         }
+        if (data.senderId === clientId) {
+          return;
+        }
+        
         incomingNeed.textContent = data.need || "";
         incomingMeta.textContent = "Da: " + (data.sender || "Sconosciuto") + " • " + (data.date || "") + " " + (data.time || "");
-        if (data.sender !== currentName && navigator.vibrate) navigator.vibrate([120, 80, 120]);
-      });
+        if (navigator.vibrate) {
+          navigator.vibrate([120, 80, 120]);
+        });
     }
 
     function getLabels() {
@@ -248,6 +257,7 @@
       if (!db || !currentRoom) { alert("Non sei collegato a una stanza."); return; }
       const now = new Date();
       const payload = {
+        senderId: clientId
         sender: currentName,
         need: need,
         date: now.toLocaleDateString("it-IT"),
