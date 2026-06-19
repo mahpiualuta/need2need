@@ -4,60 +4,178 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Need2Need One2One</title>
+
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Need2Need">
   <meta name="theme-color" content="#0A84FF">
+
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f2f2f7; color: #111; }
-    .container { max-width: 540px; margin: 0 auto; padding: 22px 16px 40px; }
-    h1 { text-align: center; font-size: 30px; margin: 8px 0 6px; }
-    .subtitle { text-align: center; color: #666; margin-bottom: 18px; line-height: 1.35; }
-    .card { background: #fff; border-radius: 18px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
-    label { display: block; font-size: 14px; color: #555; margin-top: 10px; margin-bottom: 5px; }
-    input { width: 100%; border: 1px solid #ccc; border-radius: 12px; padding: 13px; font-size: 17px; background: #fff; }
-    .primary { width: 100%; border: none; border-radius: 14px; padding: 15px; margin-top: 14px; font-size: 17px; font-weight: 700; background: #0A84FF; color: white; }
-    .secondary { width: 100%; border: none; border-radius: 14px; padding: 14px; margin-top: 10px; font-size: 16px; font-weight: 700; background: #e9e9ef; color: #0A84FF; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f2f2f7;
+      color: #111;
+    }
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 22px 16px 40px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 30px;
+      margin: 8px 0 6px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 18px;
+      line-height: 1.35;
+    }
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      color: #555;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 13px;
+      font-size: 17px;
+      background: #fff;
+    }
+    .primary {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 15px;
+      margin-top: 14px;
+      font-size: 17px;
+      font-weight: 700;
+      background: #0A84FF;
+      color: white;
+    }
+    .secondary {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      background: #e9e9ef;
+      color: #0A84FF;
+    }
     .danger { color: #d70015; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .need-button { min-height: 88px; border: none; border-radius: 18px; background: #0A84FF; color: white; font-size: 17px; font-weight: 700; padding: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-    .need-button:active { transform: scale(0.97); opacity: 0.85; }
-    .incoming { text-align: center; padding: 22px 16px; border-radius: 18px; background: #111827; color: white; min-height: 145px; display: flex; flex-direction: column; justify-content: center; }
-    .incoming .small { color: #b7beca; margin-bottom: 8px; }
-    .incoming .need { font-size: 28px; font-weight: 800; line-height: 1.2; word-break: break-word; }
-    .incoming .meta { color: #cbd5e1; margin-top: 12px; font-size: 14px; }
-    .status { text-align: center; min-height: 22px; color: #555; margin-top: 8px; font-size: 14px; }
-    .history { max-height: 240px; overflow-y: auto; font-size: 14px; }
-    .history-row { border-bottom: 1px solid #eee; padding: 9px 0; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .need-button {
+      min-height: 88px;
+      border: none;
+      border-radius: 18px;
+      background: #0A84FF;
+      color: white;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .need-button:active {
+      transform: scale(0.97);
+      opacity: 0.85;
+    }
+    .incoming {
+      text-align: center;
+      padding: 22px 16px;
+      border-radius: 18px;
+      background: #111827;
+      color: white;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .incoming .small {
+      color: #b7beca;
+      margin-bottom: 8px;
+    }
+    .incoming .need {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+    .incoming .meta {
+      color: #cbd5e1;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .status {
+      text-align: center;
+      min-height: 22px;
+      color: #555;
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .history {
+      max-height: 240px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+    .history-row {
+      border-bottom: 1px solid #eee;
+      padding: 9px 0;
+    }
     .history-row:last-child { border-bottom: none; }
     .hidden { display: none; }
-    .muted { color: #777; font-size: 13px; line-height: 1.35; }
-    .pill { display:inline-block; background:#eef5ff; color:#0A84FF; padding:5px 9px; border-radius:999px; font-size:13px; font-weight:700; }
+    .muted {
+      color: #777;
+      font-size: 13px;
+      line-height: 1.35;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Need2Need</h1>
-    <div class="subtitle">Una persona invia una necessità, l'altra la vede in tempo reale.</div>
+    <div class="subtitle">
+      One2One: una persona invia una necessità, l’altra la vede in tempo reale.
+    </div>
 
     <div class="card" id="setupCard">
-      <strong>Collegamento one2one</strong>
-      <p class="muted">Le due persone devono aprire la stessa app e inserire lo stesso codice stanza.</p>
+      <strong>Collegamento</strong>
+
       <label>Il tuo nome o codice</label>
       <input id="myName" placeholder="Es. Fabio, P001, Mamma..." />
+
       <label>Codice stanza condiviso</label>
-      <input id="roomCode" placeholder="Es. N2N-7K9Q2X" autocapitalize="characters" />
+      <input id="roomCode" placeholder="Es. N2N-8XQ4ZP" autocapitalize="characters" />
+
       <button class="primary" id="connectBtn">Collegati</button>
       <button class="secondary" id="generateRoomBtn">Genera codice stanza</button>
-      <p class="muted">Per maggiore riservatezza usa un codice lungo e non ovvio. Evita dati sanitari o troppo sensibili nei testi.</p>
+
+      <p class="muted">
+        Le due persone devono inserire lo stesso codice stanza. Usa un codice lungo e non ovvio.
+      </p>
     </div>
 
     <div id="appArea" class="hidden">
-      <div class="card">
-        <span class="pill">Stanza: <span id="roomBadge"></span></span>
-        <button class="secondary" id="disconnectBtn">Cambia stanza</button>
-      </div>
-
       <div class="card incoming">
         <div class="small">Ultima necessità ricevuta</div>
         <div class="need" id="incomingNeed">In attesa...</div>
@@ -72,18 +190,31 @@
 
       <div class="card">
         <strong>Modifica i tuoi sei bottoni</strong>
-        <label>Bottone 1</label><input id="label0" />
-        <label>Bottone 2</label><input id="label1" />
-        <label>Bottone 3</label><input id="label2" />
-        <label>Bottone 4</label><input id="label3" />
-        <label>Bottone 5</label><input id="label4" />
-        <label>Bottone 6</label><input id="label5" />
+
+        <label>Bottone 1</label>
+        <input id="label0" />
+
+        <label>Bottone 2</label>
+        <input id="label1" />
+
+        <label>Bottone 3</label>
+        <input id="label2" />
+
+        <label>Bottone 4</label>
+        <input id="label3" />
+
+        <label>Bottone 5</label>
+        <input id="label4" />
+
+        <label>Bottone 6</label>
+        <input id="label5" />
+
         <button class="secondary" id="saveLabelsBtn">Salva testi bottoni</button>
         <button class="secondary" id="resetLabelsBtn">Ripristina testi predefiniti</button>
       </div>
 
       <div class="card">
-        <strong>Storico locale</strong>
+        <strong>Storico locale inviati</strong>
         <div class="history" id="historyList"></div>
         <button class="secondary" id="shareCsvBtn">Condividi CSV locale</button>
         <button class="secondary danger" id="clearHistoryBtn">Cancella storico locale</button>
@@ -93,26 +224,31 @@
 
   <script type="module">
     /*
-      PRIMA DI PUBBLICARE:
-      1) Crea un progetto su Firebase Console.
-      2) Crea una Web App e copia qui firebaseConfig.
-      3) Attiva Realtime Database.
-      4) Imposta regole di test, poi rendile più restrittive se usi dati reali.
+      1) Sostituisci firebaseConfig con quello del tuo progetto Firebase.
+      2) Controlla che databaseURL sia quello di Realtime Database.
+      3) Nel Realtime Database usa regole che consentano la scrittura sotto rooms.
     */
 
     const firebaseConfig = {
-  apiKey: "AIzaSyDS2LNB4MTkxf2IWt9E6BIqHsGbjZbQnAE",
-  authDomain: "need2need-422fc.firebaseapp.com",
-  databaseURL: "https://need2need-422fc-default-rtdb.europe-west1.firebasedatabase.app/",
-  projectId: "need2need-422fc",
-  storageBucket: "need2need-422fc.firebasestorage.app",
-  messagingSenderId: "1051910375106",
-  appId: "1:1051910375106:web:37329bb0d4b106d4dc1d5b",
-  measurementId: "G-Z2D7L2LX05"
-};
+        apiKey: "AIzaSyDS2LNB4MTkxf2IWt9E6BIqHsGbjZbQnAE",
+        authDomain: "need2need-422fc.firebaseapp.com",
+        databaseURL: "https://need2need-422fc-default-rtdb.europe-west1.firebasedatabase.app/",
+        projectId: "need2need-422fc",
+        storageBucket: "need2need-422fc.firebasestorage.app",
+        messagingSenderId: "1051910375106",
+        appId: "1:1051910375106:web:37329bb0d4b106d4dc1d5b",
+        measurementId: "G-Z2D7L2LX05"
+    };
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+    import {
+      getDatabase,
+      ref,
+      set,
+      onValue,
+      push,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
     const defaultLabels = [
       "Ho bisogno di bere",
@@ -123,36 +259,42 @@
       "Ho bisogno di riposare"
     ];
 
-    let app, db, currentRoom = "", currentName = "", unsubscribeRoom = null;
     let clientId = localStorage.getItem("need2need_client_id");
     if (!clientId) {
       clientId = crypto.randomUUID();
       localStorage.setItem("need2need_client_id", clientId);
     }
+
+    let app;
+    let db;
+    let currentRoom = "";
+    let currentName = "";
+
     const setupCard = document.getElementById("setupCard");
     const appArea = document.getElementById("appArea");
     const myNameInput = document.getElementById("myName");
     const roomCodeInput = document.getElementById("roomCode");
+    const connectBtn = document.getElementById("connectBtn");
+    const generateRoomBtn = document.getElementById("generateRoomBtn");
     const buttonsGrid = document.getElementById("buttonsGrid");
     const statusEl = document.getElementById("status");
     const incomingNeed = document.getElementById("incomingNeed");
     const incomingMeta = document.getElementById("incomingMeta");
     const historyList = document.getElementById("historyList");
-    const roomBadge = document.getElementById("roomBadge");
 
     myNameInput.value = localStorage.getItem("need2need_name") || "";
     roomCodeInput.value = localStorage.getItem("need2need_room") || "";
 
-    document.getElementById("connectBtn").addEventListener("click", connect);
-    document.getElementById("generateRoomBtn").addEventListener("click", generateRoom);
-    document.getElementById("disconnectBtn").addEventListener("click", disconnect);
+    connectBtn.addEventListener("click", connect);
+    generateRoomBtn.addEventListener("click", generateRoom);
     document.getElementById("saveLabelsBtn").addEventListener("click", saveLabelsFromInputs);
     document.getElementById("resetLabelsBtn").addEventListener("click", resetLabels);
     document.getElementById("shareCsvBtn").addEventListener("click", shareCSV);
     document.getElementById("clearHistoryBtn").addEventListener("click", clearHistory);
 
     function generateRoom() {
-      roomCodeInput.value = "N2N-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+      const code = "N2N-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+      roomCodeInput.value = code;
     }
 
     function sanitizeRoom(value) {
@@ -162,9 +304,14 @@
     function connect() {
       currentName = myNameInput.value.trim() || "Partecipante";
       currentRoom = sanitizeRoom(roomCodeInput.value);
-      if (!currentRoom) { alert("Inserisci o genera un codice stanza."); return; }
-      if (firebaseConfig.apiKey.startsWith("INSERISCI_")) {
-        alert("Prima devi inserire nel file la configurazione Firebase.");
+
+      if (!currentRoom) {
+        alert("Inserisci o genera un codice stanza.");
+        return;
+      }
+
+      if (firebaseConfig.apiKey.startsWith("INCOLLA_QUI")) {
+        alert("Devi prima incollare nel file il firebaseConfig reale.");
         return;
       }
 
@@ -172,47 +319,53 @@
       localStorage.setItem("need2need_room", currentRoom);
 
       try {
-        if (!app) app = initializeApp(firebaseConfig);
+        app = initializeApp(firebaseConfig);
         db = getDatabase(app);
-      } catch (error) { console.error(error); }
+      } catch (error) {
+        console.error(error);
+        alert("Errore inizializzazione Firebase: " + error.message);
+        return;
+      }
 
       setupCard.classList.add("hidden");
       appArea.classList.remove("hidden");
-      roomBadge.textContent = currentRoom;
 
       renderButtons();
       loadLabelsIntoInputs();
       renderHistory();
       listenToRoom();
-      statusEl.textContent = "Collegato alla stanza " + currentRoom;
-    }
 
-    function disconnect() {
-      if (unsubscribeRoom) unsubscribeRoom();
-      unsubscribeRoom = null;
-      currentRoom = "";
-      setupCard.classList.remove("hidden");
-      appArea.classList.add("hidden");
+      statusEl.textContent = "Collegato alla stanza " + currentRoom;
     }
 
     function listenToRoom() {
       const lastNeedRef = ref(db, "rooms/" + currentRoom + "/lastNeed");
-      unsubscribeRoom = onValue(lastNeedRef, snapshot => {
+
+      onValue(lastNeedRef, snapshot => {
         const data = snapshot.val();
+
         if (!data) {
           incomingNeed.textContent = "In attesa...";
           incomingMeta.textContent = "";
           return;
         }
+
+        // Non mostra come "ricevuta" la necessità inviata dallo stesso dispositivo.
         if (data.senderId === clientId) {
           return;
         }
-        
+
         incomingNeed.textContent = data.need || "";
-        incomingMeta.textContent = "Da: " + (data.sender || "Sconosciuto") + " • " + (data.date || "") + " " + (data.time || "");
+        incomingMeta.textContent =
+          "Da: " + (data.sender || "Sconosciuto") + " • " +
+          (data.date || "") + " " + (data.time || "");
+
         if (navigator.vibrate) {
           navigator.vibrate([120, 80, 120]);
-        });
+        }
+      }, error => {
+        statusEl.textContent = "Errore lettura Firebase: " + error.message;
+      });
     }
 
     function getLabels() {
@@ -220,11 +373,14 @@
       return saved ? JSON.parse(saved) : defaultLabels;
     }
 
-    function setLabels(labels) { localStorage.setItem("need2need_labels", JSON.stringify(labels)); }
+    function setLabels(labels) {
+      localStorage.setItem("need2need_labels", JSON.stringify(labels));
+    }
 
     function renderButtons() {
       const labels = getLabels();
       buttonsGrid.innerHTML = "";
+
       labels.forEach(label => {
         const btn = document.createElement("button");
         btn.className = "need-button";
@@ -236,12 +392,18 @@
 
     function loadLabelsIntoInputs() {
       const labels = getLabels();
-      for (let i = 0; i < 6; i++) document.getElementById("label" + i).value = labels[i] || "";
+      for (let i = 0; i < 6; i++) {
+        document.getElementById("label" + i).value = labels[i] || "";
+      }
     }
 
     function saveLabelsFromInputs() {
       const labels = [];
-      for (let i = 0; i < 6; i++) labels.push(document.getElementById("label" + i).value.trim() || "Bottone " + (i + 1));
+      for (let i = 0; i < 6; i++) {
+        const value = document.getElementById("label" + i).value.trim();
+        labels.push(value || "Bottone " + (i + 1));
+      }
+
       setLabels(labels);
       renderButtons();
       statusEl.textContent = "Testi bottoni salvati.";
@@ -255,24 +417,31 @@
     }
 
     async function sendNeed(need) {
-      if (!db || !currentRoom) { alert("Non sei collegato a una stanza."); return; }
+      if (!db || !currentRoom) {
+        alert("Non sei collegato a una stanza.");
+        return;
+      }
+
       const now = new Date();
+
       const payload = {
-        senderId: clientId
+        senderId: clientId,
         sender: currentName,
         need: need,
         date: now.toLocaleDateString("it-IT"),
         time: now.toLocaleTimeString("it-IT"),
         createdAt: serverTimestamp()
       };
+
       try {
         await set(ref(db, "rooms/" + currentRoom + "/lastNeed"), payload);
         await push(ref(db, "rooms/" + currentRoom + "/events"), payload);
+
         addLocalHistory(payload);
         statusEl.textContent = "Inviato: " + need;
       } catch (error) {
         console.error(error);
-        statusEl.textContent = "Errore durante l'invio.";
+        statusEl.textContent = "Errore invio Firebase: " + error.message;
       }
     }
 
@@ -281,7 +450,9 @@
       return saved ? JSON.parse(saved) : [];
     }
 
-    function setHistory(history) { localStorage.setItem("need2need_history", JSON.stringify(history)); }
+    function setHistory(history) {
+      localStorage.setItem("need2need_history", JSON.stringify(history));
+    }
 
     function addLocalHistory(item) {
       const history = getHistory();
@@ -292,24 +463,42 @@
 
     function renderHistory() {
       const history = getHistory();
-      if (history.length === 0) { historyList.innerHTML = "<p class='muted'>Nessuna registrazione locale.</p>"; return; }
+
+      if (history.length === 0) {
+        historyList.innerHTML = "<p class='muted'>Nessuna registrazione locale.</p>";
+        return;
+      }
+
       historyList.innerHTML = "";
+
       history.slice().reverse().forEach(item => {
         const div = document.createElement("div");
         div.className = "history-row";
-        div.innerHTML = "<strong>" + escapeHtml(item.date) + " " + escapeHtml(item.time) + "</strong><br>" + escapeHtml(item.sender || "") + ": " + escapeHtml(item.need || "");
+        div.innerHTML =
+          "<strong>" + escapeHtml(item.date) + " " + escapeHtml(item.time) + "</strong><br>" +
+          escapeHtml(item.sender || "") + ": " + escapeHtml(item.need || "");
         historyList.appendChild(div);
       });
     }
 
-    function csvEscape(value) { return '"' + String(value || "").replaceAll('"', '""') + '"'; }
+    function csvEscape(value) {
+      return '"' + String(value || "").replaceAll('"', '""') + '"';
+    }
 
     function buildCSV() {
       const history = getHistory();
       let csv = "\uFEFFStanza;Mittente;Data;Ora;Necessita\n";
+
       history.forEach(item => {
-        csv += [csvEscape(currentRoom), csvEscape(item.sender), csvEscape(item.date), csvEscape(item.time), csvEscape(item.need)].join(";") + "\n";
+        csv += [
+          csvEscape(currentRoom),
+          csvEscape(item.sender),
+          csvEscape(item.date),
+          csvEscape(item.time),
+          csvEscape(item.need)
+        ].join(";") + "\n";
       });
+
       return csv;
     }
 
@@ -321,27 +510,40 @@
 
     async function shareCSV() {
       const file = getCSVFile();
+
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try { await navigator.share({ files: [file], title: "Storico Need2Need" }); }
-        catch (error) { statusEl.textContent = "Condivisione annullata."; }
-      } else { downloadCSV(); }
+        try {
+          await navigator.share({
+            files: [file],
+            title: "Storico Need2Need"
+          });
+        } catch (error) {
+          statusEl.textContent = "Condivisione annullata.";
+        }
+      } else {
+        downloadCSV();
+      }
     }
 
     function downloadCSV() {
       const csv = buildCSV();
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
       const url = URL.createObjectURL(blob);
+
       const a = document.createElement("a");
       a.href = url;
       a.download = "need2need_storico.csv";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+
       URL.revokeObjectURL(url);
     }
 
     function clearHistory() {
-      if (!confirm("Vuoi cancellare lo storico locale?")) return;
+      const ok = confirm("Vuoi cancellare lo storico locale?");
+      if (!ok) return;
+
       localStorage.removeItem("need2need_history");
       renderHistory();
       statusEl.textContent = "Storico locale cancellato.";
@@ -349,8 +551,11 @@
 
     function escapeHtml(value) {
       return String(value || "")
-        .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
   </script>
 </body>
