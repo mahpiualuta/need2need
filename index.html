@@ -133,15 +133,71 @@
       line-height: 1.35;
     }
     .history {
-      max-height: 240px;
+      max-height: 260px;
       overflow-y: auto;
       font-size: 14px;
     }
     .history-row {
       border-bottom: 1px solid #eee;
-      padding: 9px 0;
+      padding: 10px 0;
+      line-height: 1.35;
     }
     .history-row:last-child { border-bottom: none; }
+    .history-row .need-text {
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+    .history-row .meta {
+      color: #666;
+      font-size: 13px;
+      margin-top: 2px;
+    }
+    .received-badge {
+      display: inline-block;
+      background: #e7f0ff;
+      color: #0A58D0;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .sent-badge {
+      display: inline-block;
+      background: #e8f8ed;
+      color: #1f7a3a;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .notification-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .toggle {
+      min-width: 92px;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-weight: 800;
+      color: white;
+      background: #8e8e93;
+    }
+    .toggle.on {
+      background: #34c759;
+    }
+    .toggle.off {
+      background: #8e8e93;
+    }
+
     .hidden { display: none; }
     .muted {
       color: #777;
@@ -155,7 +211,7 @@
   <div class="container">
     <h1>Need2Need</h1>
     <div class="subtitle">
-      One2One: una persona invia un bisogno, l’altra lo vede in tempo reale.
+      One2One: una persona invia una necessità, l’altra la vede in tempo reale.
     </div>
 
     <div class="card" id="setupCard">
@@ -177,15 +233,37 @@
 
     <div id="appArea" class="hidden">
       <div class="card incoming">
-        <div class="small">Ultima bisogno ricevuto</div>
+        <div class="small">Ultima necessità ricevuta</div>
         <div class="need" id="incomingNeed">In attesa...</div>
         <div class="meta" id="incomingMeta"></div>
       </div>
 
       <div class="card">
-        <strong>Invia un bisogno</strong>
+        <strong>Notifiche</strong>
+        <div class="notification-row">
+          <div>
+            <div>Attiva notifiche</div>
+            <div class="muted">Avviso locale, vibrazione e notifica browser quando arriva una richiesta.</div>
+          </div>
+          <button class="toggle off" id="notificationToggleBtn">NO</button>
+        </div>
+        <div class="status" id="notificationStatus"></div>
+      </div>
+
+      <div class="card">
+        <strong>Invia una necessità</strong>
         <div class="grid" id="buttonsGrid" style="margin-top: 14px;"></div>
         <div class="status" id="status"></div>
+      </div>
+
+      <div class="card">
+        <strong>Richieste ricevute</strong>
+        <p class="muted">
+          Qui trovi l’elenco delle necessità ricevute dall’altra persona nella stanza corrente.
+        </p>
+        <div class="history" id="receivedList"></div>
+        <button class="secondary" id="shareReceivedCsvBtn">Condividi CSV ricevute</button>
+        <button class="secondary danger" id="clearReceivedBtn">Cancella elenco ricevute</button>
       </div>
 
       <div class="card">
@@ -215,29 +293,28 @@
 
       <div class="card">
         <strong>Storico locale inviati</strong>
-        <div class="history" id="historyList"></div>
-        <button class="secondary" id="shareCsvBtn">Condividi CSV locale</button>
-        <button class="secondary danger" id="clearHistoryBtn">Cancella storico locale</button>
+        <div class="history" id="sentList"></div>
+        <button class="secondary" id="shareSentCsvBtn">Condividi CSV inviati</button>
+        <button class="secondary danger" id="clearSentBtn">Cancella storico inviati</button>
       </div>
     </div>
   </div>
 
   <script type="module">
     /*
-      1) Sostituisci firebaseConfig con quello del tuo progetto Firebase.
-      2) Controlla che databaseURL sia quello di Realtime Database.
-      3) Nel Realtime Database usa regole che consentano la scrittura sotto rooms.
+      Sostituisci firebaseConfig con quello reale del tuo progetto Firebase.
+      Il databaseURL deve essere quello di Realtime Database.
     */
 
     const firebaseConfig = {
         apiKey: "AIzaSyDS2LNB4MTkxf2IWt9E6BIqHsGbjZbQnAE",
-        authDomain: "need2need-422fc.firebaseapp.com",
-        databaseURL: "https://need2need-422fc-default-rtdb.europe-west1.firebasedatabase.app/",
-        projectId: "need2need-422fc",
-        storageBucket: "need2need-422fc.firebasestorage.app",
-        messagingSenderId: "1051910375106",
-        appId: "1:1051910375106:web:37329bb0d4b106d4dc1d5b",
-        measurementId: "G-Z2D7L2LX05"
+  authDomain: "need2need-422fc.firebaseapp.com",
+  databaseURL: "https://need2need-422fc-default-rtdb.europe-west1.firebasedatabase.app/",
+  projectId: "need2need-422fc",
+  storageBucket: "need2need-422fc.firebasestorage.app",
+  messagingSenderId: "1051910375106",
+  appId: "1:1051910375106:web:37329bb0d4b106d4dc1d5b",
+  measurementId: "G-Z2D7L2LX05"
     };
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
@@ -246,6 +323,7 @@
       ref,
       set,
       onValue,
+      onChildAdded,
       push,
       serverTimestamp
     } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
@@ -265,6 +343,10 @@
       localStorage.setItem("need2need_client_id", clientId);
     }
 
+    let notificationsEnabled = localStorage.getItem("need2need_notifications_enabled") === "true";
+    let audioContext = null;
+    let firstLastNeedLoad = true;
+
     let app;
     let db;
     let currentRoom = "";
@@ -280,7 +362,10 @@
     const statusEl = document.getElementById("status");
     const incomingNeed = document.getElementById("incomingNeed");
     const incomingMeta = document.getElementById("incomingMeta");
-    const historyList = document.getElementById("historyList");
+    const receivedList = document.getElementById("receivedList");
+    const sentList = document.getElementById("sentList");
+    const notificationToggleBtn = document.getElementById("notificationToggleBtn");
+    const notificationStatus = document.getElementById("notificationStatus");
 
     myNameInput.value = localStorage.getItem("need2need_name") || "";
     roomCodeInput.value = localStorage.getItem("need2need_room") || "";
@@ -289,8 +374,11 @@
     generateRoomBtn.addEventListener("click", generateRoom);
     document.getElementById("saveLabelsBtn").addEventListener("click", saveLabelsFromInputs);
     document.getElementById("resetLabelsBtn").addEventListener("click", resetLabels);
-    document.getElementById("shareCsvBtn").addEventListener("click", shareCSV);
-    document.getElementById("clearHistoryBtn").addEventListener("click", clearHistory);
+    document.getElementById("shareReceivedCsvBtn").addEventListener("click", () => shareCSV("received"));
+    document.getElementById("shareSentCsvBtn").addEventListener("click", () => shareCSV("sent"));
+    document.getElementById("clearReceivedBtn").addEventListener("click", clearReceivedHistory);
+    document.getElementById("clearSentBtn").addEventListener("click", clearSentHistory);
+    notificationToggleBtn.addEventListener("click", toggleNotifications);
 
     function generateRoom() {
       const code = "N2N-" + Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -318,6 +406,8 @@
       localStorage.setItem("need2need_name", currentName);
       localStorage.setItem("need2need_room", currentRoom);
 
+      firstLastNeedLoad = true;
+
       try {
         app = initializeApp(firebaseConfig);
         db = getDatabase(app);
@@ -332,13 +422,17 @@
 
       renderButtons();
       loadLabelsIntoInputs();
-      renderHistory();
-      listenToRoom();
+      renderReceivedHistory();
+      renderSentHistory();
+      updateNotificationUI();
+
+      listenToLastNeed();
+      listenToEvents();
 
       statusEl.textContent = "Collegato alla stanza " + currentRoom;
     }
 
-    function listenToRoom() {
+    function listenToLastNeed() {
       const lastNeedRef = ref(db, "rooms/" + currentRoom + "/lastNeed");
 
       onValue(lastNeedRef, snapshot => {
@@ -350,7 +444,6 @@
           return;
         }
 
-        // Non mostra come "ricevuta" la necessità inviata dallo stesso dispositivo.
         if (data.senderId === clientId) {
           return;
         }
@@ -360,12 +453,165 @@
           "Da: " + (data.sender || "Sconosciuto") + " • " +
           (data.date || "") + " " + (data.time || "");
 
-        if (navigator.vibrate) {
-          navigator.vibrate([120, 80, 120]);
+        if (firstLastNeedLoad) {
+          firstLastNeedLoad = false;
+          return;
         }
+
+        notifyIncomingNeed(data);
       }, error => {
         statusEl.textContent = "Errore lettura Firebase: " + error.message;
       });
+    }
+
+    function listenToEvents() {
+      const eventsRef = ref(db, "rooms/" + currentRoom + "/events");
+
+      onChildAdded(eventsRef, snapshot => {
+        const data = snapshot.val();
+        const eventId = snapshot.key;
+
+        if (!data || !eventId) return;
+
+        if (data.senderId === clientId) {
+          return;
+        }
+
+        addReceivedHistory({
+          eventId: eventId,
+          room: currentRoom,
+          senderId: data.senderId || "",
+          sender: data.sender || "Sconosciuto",
+          need: data.need || "",
+          date: data.date || "",
+          time: data.time || ""
+        });
+      }, error => {
+        statusEl.textContent = "Errore elenco ricevute Firebase: " + error.message;
+      });
+    }
+
+
+    async function toggleNotifications() {
+      if (notificationsEnabled) {
+        notificationsEnabled = false;
+        localStorage.setItem("need2need_notifications_enabled", "false");
+        updateNotificationUI("Notifiche disattivate.");
+        return;
+      }
+
+      if (!("Notification" in window)) {
+        notificationsEnabled = true;
+        localStorage.setItem("need2need_notifications_enabled", "true");
+        updateNotificationUI("Notifiche browser non disponibili. Rimangono attivi avviso sonoro/vibrazione, se supportati.");
+        return;
+      }
+
+      try {
+        let permission = Notification.permission;
+
+        if (permission === "default") {
+          permission = await Notification.requestPermission();
+        }
+
+        if (permission === "granted") {
+          notificationsEnabled = true;
+          localStorage.setItem("need2need_notifications_enabled", "true");
+          updateNotificationUI("Notifiche attivate.");
+          showBrowserNotification("Need2Need", "Notifiche attivate correttamente.");
+        } else {
+          notificationsEnabled = false;
+          localStorage.setItem("need2need_notifications_enabled", "false");
+          updateNotificationUI("Permesso notifiche non concesso dal browser.");
+        }
+      } catch (error) {
+        notificationsEnabled = true;
+        localStorage.setItem("need2need_notifications_enabled", "true");
+        updateNotificationUI("Notifiche browser non disponibili. Rimangono attivi avviso sonoro/vibrazione, se supportati.");
+      }
+    }
+
+    function updateNotificationUI(message) {
+      if (notificationsEnabled) {
+        notificationToggleBtn.textContent = "SÌ";
+        notificationToggleBtn.classList.remove("off");
+        notificationToggleBtn.classList.add("on");
+      } else {
+        notificationToggleBtn.textContent = "NO";
+        notificationToggleBtn.classList.remove("on");
+        notificationToggleBtn.classList.add("off");
+      }
+
+      if (message) {
+        notificationStatus.textContent = message;
+      } else {
+        notificationStatus.textContent = notificationsEnabled
+          ? "Notifiche attive su questo dispositivo."
+          : "Notifiche disattivate su questo dispositivo.";
+      }
+    }
+
+    function notifyIncomingNeed(data) {
+      if (!notificationsEnabled) return;
+
+      if (navigator.vibrate) {
+        navigator.vibrate([120, 80, 120]);
+      }
+
+      playNotificationSound();
+
+      const title = "Nuova necessità";
+      const body = "Da " + (data.sender || "Sconosciuto") + ": " + (data.need || "");
+
+      showBrowserNotification(title, body);
+    }
+
+    function showBrowserNotification(title, body) {
+      if (!("Notification" in window)) return;
+      if (Notification.permission !== "granted") return;
+
+      try {
+        new Notification(title, {
+          body: body,
+          tag: "need2need-" + currentRoom,
+          renotify: true
+        });
+      } catch (error) {
+        console.warn("Notifica browser non mostrata:", error);
+      }
+    }
+
+    function playNotificationSound() {
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+
+        if (!audioContext) {
+          audioContext = new AudioContextClass();
+        }
+
+        if (audioContext.state === "suspended") {
+          audioContext.resume();
+        }
+
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.value = 880;
+
+        gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.15, audioContext.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.25);
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.27);
+      } catch (error) {
+        console.warn("Audio notifica non disponibile:", error);
+      }
     }
 
     function getLabels() {
@@ -437,7 +683,15 @@
         await set(ref(db, "rooms/" + currentRoom + "/lastNeed"), payload);
         await push(ref(db, "rooms/" + currentRoom + "/events"), payload);
 
-        addLocalHistory(payload);
+        addSentHistory({
+          room: currentRoom,
+          senderId: clientId,
+          sender: currentName,
+          need: need,
+          date: payload.date,
+          time: payload.time
+        });
+
         statusEl.textContent = "Inviato: " + need;
       } catch (error) {
         console.error(error);
@@ -445,39 +699,78 @@
       }
     }
 
-    function getHistory() {
-      const saved = localStorage.getItem("need2need_history");
+    function storageKey(type) {
+      return "need2need_" + type + "_history_" + currentRoom;
+    }
+
+    function getHistory(type) {
+      const saved = localStorage.getItem(storageKey(type));
       return saved ? JSON.parse(saved) : [];
     }
 
-    function setHistory(history) {
-      localStorage.setItem("need2need_history", JSON.stringify(history));
+    function setHistory(type, history) {
+      localStorage.setItem(storageKey(type), JSON.stringify(history));
     }
 
-    function addLocalHistory(item) {
-      const history = getHistory();
-      history.push(item);
-      setHistory(history);
-      renderHistory();
-    }
+    function addReceivedHistory(item) {
+      const history = getHistory("received");
 
-    function renderHistory() {
-      const history = getHistory();
-
-      if (history.length === 0) {
-        historyList.innerHTML = "<p class='muted'>Nessuna registrazione locale.</p>";
+      if (history.some(x => x.eventId === item.eventId)) {
         return;
       }
 
-      historyList.innerHTML = "";
+      history.push(item);
+      setHistory("received", history);
+      renderReceivedHistory();
+    }
+
+    function addSentHistory(item) {
+      const history = getHistory("sent");
+      history.push(item);
+      setHistory("sent", history);
+      renderSentHistory();
+    }
+
+    function renderReceivedHistory() {
+      const history = getHistory("received");
+
+      if (history.length === 0) {
+        receivedList.innerHTML = "<p class='muted'>Nessuna richiesta ricevuta.</p>";
+        return;
+      }
+
+      receivedList.innerHTML = "";
 
       history.slice().reverse().forEach(item => {
         const div = document.createElement("div");
         div.className = "history-row";
         div.innerHTML =
-          "<strong>" + escapeHtml(item.date) + " " + escapeHtml(item.time) + "</strong><br>" +
-          escapeHtml(item.sender || "") + ": " + escapeHtml(item.need || "");
-        historyList.appendChild(div);
+          "<span class='received-badge'>RICEVUTA</span>" +
+          "<div class='need-text'>" + escapeHtml(item.need || "") + "</div>" +
+          "<div class='meta'>Da: " + escapeHtml(item.sender || "") +
+          " • " + escapeHtml(item.date || "") + " " + escapeHtml(item.time || "") + "</div>";
+        receivedList.appendChild(div);
+      });
+    }
+
+    function renderSentHistory() {
+      const history = getHistory("sent");
+
+      if (history.length === 0) {
+        sentList.innerHTML = "<p class='muted'>Nessuna richiesta inviata.</p>";
+        return;
+      }
+
+      sentList.innerHTML = "";
+
+      history.slice().reverse().forEach(item => {
+        const div = document.createElement("div");
+        div.className = "history-row";
+        div.innerHTML =
+          "<span class='sent-badge'>INVIATA</span>" +
+          "<div class='need-text'>" + escapeHtml(item.need || "") + "</div>" +
+          "<div class='meta'>" + escapeHtml(item.date || "") + " " + escapeHtml(item.time || "") + "</div>";
+        sentList.appendChild(div);
       });
     }
 
@@ -485,13 +778,16 @@
       return '"' + String(value || "").replaceAll('"', '""') + '"';
     }
 
-    function buildCSV() {
-      const history = getHistory();
-      let csv = "\uFEFFStanza;Mittente;Data;Ora;Necessita\n";
+    function buildCSV(type) {
+      const history = getHistory(type);
+      const label = type === "received" ? "Ricevuta" : "Inviata";
+
+      let csv = "\uFEFFTipo;Stanza;Mittente;Data;Ora;Necessita\n";
 
       history.forEach(item => {
         csv += [
-          csvEscape(currentRoom),
+          csvEscape(label),
+          csvEscape(item.room || currentRoom),
           csvEscape(item.sender),
           csvEscape(item.date),
           csvEscape(item.time),
@@ -502,37 +798,44 @@
       return csv;
     }
 
-    function getCSVFile() {
-      const csv = buildCSV();
+    function getCSVFile(type) {
+      const csv = buildCSV(type);
+      const fileName = type === "received"
+        ? "need2need_richieste_ricevute.csv"
+        : "need2need_richieste_inviate.csv";
+
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-      return new File([blob], "need2need_storico.csv", { type: "text/csv" });
+      return new File([blob], fileName, { type: "text/csv" });
     }
 
-    async function shareCSV() {
-      const file = getCSVFile();
+    async function shareCSV(type) {
+      const file = getCSVFile(type);
 
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
             files: [file],
-            title: "Storico Need2Need"
+            title: type === "received" ? "Richieste ricevute" : "Richieste inviate"
           });
         } catch (error) {
           statusEl.textContent = "Condivisione annullata.";
         }
       } else {
-        downloadCSV();
+        downloadCSV(type);
       }
     }
 
-    function downloadCSV() {
-      const csv = buildCSV();
+    function downloadCSV(type) {
+      const csv = buildCSV(type);
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
       const url = URL.createObjectURL(blob);
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = "need2need_storico.csv";
+      a.download = type === "received"
+        ? "need2need_richieste_ricevute.csv"
+        : "need2need_richieste_inviate.csv";
+
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -540,13 +843,22 @@
       URL.revokeObjectURL(url);
     }
 
-    function clearHistory() {
-      const ok = confirm("Vuoi cancellare lo storico locale?");
+    function clearReceivedHistory() {
+      const ok = confirm("Vuoi cancellare l'elenco locale delle richieste ricevute?");
       if (!ok) return;
 
-      localStorage.removeItem("need2need_history");
-      renderHistory();
-      statusEl.textContent = "Storico locale cancellato.";
+      localStorage.removeItem(storageKey("received"));
+      renderReceivedHistory();
+      statusEl.textContent = "Elenco ricevute cancellato localmente.";
+    }
+
+    function clearSentHistory() {
+      const ok = confirm("Vuoi cancellare lo storico locale delle richieste inviate?");
+      if (!ok) return;
+
+      localStorage.removeItem(storageKey("sent"));
+      renderSentHistory();
+      statusEl.textContent = "Storico inviati cancellato localmente.";
     }
 
     function escapeHtml(value) {
